@@ -1,11 +1,12 @@
+<p align="center">
 <img src="images/github_images.png" alt="Apple Notes Theme" width="500px" />
 
-<p align="center">
+
 
 # Apple Notes Theme for Grav
 
 A beautiful, minimalist Grav theme inspired by Apple Notes, ported from the original Next.js design by [Alanagoyal](https://alanagoyal.com/notes).
-
+</p>
 ## Credits
 
 **Original Design**: All design credit goes to [Alanagoyal](https://alanagoyal.com/notes) for creating the original Apple Notes-inspired theme. This is a port to Grav CMS, which I believe is the perfect tool for this type of content-focused, markdown-based note-taking experience.
