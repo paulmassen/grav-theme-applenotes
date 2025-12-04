@@ -1,39 +1,22 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# Ignore everything by default
+*
 
-# dependencies
-/node_modules
-/.pnp
-.pnp.js
-.yarn/install-state.gz
+# But keep the theme directory structure
+!grav-admin/
+!grav-admin/user/
+!grav-admin/user/themes/
+!grav-admin/user/themes/apple-notes/
 
-# testing
-/coverage
+# Keep all theme files
+!grav-admin/user/themes/apple-notes/**
 
-# next.js
-/.next/
-/out/
+# But ignore build artifacts and dependencies
+grav-admin/user/themes/apple-notes/node_modules/
+grav-admin/user/themes/apple-notes/.DS_Store
+grav-admin/user/themes/apple-notes/package-lock.json
+grav-admin/user/themes/apple-notes/css/apple-notes.css
 
-# production
-/build
-
-# misc
-.DS_Store
-*.pem
-
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# local env files
-.env*.local
-
-# vercel
-.vercel
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts
-
-# internal documentation
-IMPLEMENTATION.md
+# Keep git files
+!.git/
+!.gitignore
+!.gitattributes
