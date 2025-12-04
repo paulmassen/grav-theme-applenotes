@@ -9,16 +9,16 @@
             <div class="w-[320px] px-2">
                 <div class="p-2">
                     <div class="relative">
-
-                        {% include 'partials/tntsearch.html.twig' with { 
-    limit: 10,
-    snippet: 100,
-    min: 3,
-    search_type: 'auto',
-    dropdown: true,
-    in_page: true
-} %}
-
+                        {% if config.plugins.tntsearch.enabled %}
+                            {% include 'partials/tntsearch.html.twig' with { 
+                            limit: 10,
+                            snippet: 100,
+                            min: 3,
+                            search_type: 'auto',
+                            dropdown: true,
+                            in_page: true
+                        } %}
+                        {% endif %}
                     </div>
                 </div>
                 <div class="py-2" id="notes-list">
