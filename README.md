@@ -1,4 +1,6 @@
-![Apple Notes Theme](images/github_images.png)
+<img src="images/github_images.png" alt="Apple Notes Theme" width="500px" />
+
+<p align="center">
 
 # Apple Notes Theme for Grav
 
