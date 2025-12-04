@@ -1,22 +1,11 @@
-# Ignore everything by default
-*
+# Ignore node_modules
+node_modules/
 
-# But keep the theme directory structure
-!grav-admin/
-!grav-admin/user/
-!grav-admin/user/themes/
-!grav-admin/user/themes/apple-notes/
-
-# Keep all theme files
-!grav-admin/user/themes/apple-notes/**
-
-# But ignore build artifacts and dependencies
-grav-admin/user/themes/apple-notes/node_modules/
-grav-admin/user/themes/apple-notes/.DS_Store
-grav-admin/user/themes/apple-notes/package-lock.json
-grav-admin/user/themes/apple-notes/css/apple-notes.css
+# Ignore build artifacts
+.DS_Store
+package-lock.json
+css/apple-notes.css
 
 # Keep git files
 !.git/
 !.gitignore
-!.gitattributes
