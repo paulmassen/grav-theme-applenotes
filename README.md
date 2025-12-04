@@ -1,5 +1,5 @@
 <p align="center">
-<img src="images/github_images.png" alt="Apple Notes Theme" width="500px" />
+<img src="images/github_image.png" alt="Apple Notes Theme" width="500px" />
 
 
 
