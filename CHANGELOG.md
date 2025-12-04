@@ -1,5 +1,6 @@
-# v0.1.0
-##  11/30/2025
+# v1.0.0
+##  12/04/2025
 
 1. [](#new)
     * ChangeLog started...
+    * Initial Release
