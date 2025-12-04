@@ -1,0 +1,284 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Variables CSS pour le thème */
+@layer base {
+    :root {
+        --background: 0 0% 100%;
+        --foreground: 0 0% 20%;
+        --card: 0 0% 100%;
+        --card-foreground: 0 0% 3.9%;
+        --popover: 0 0% 100%;
+        --popover-foreground: 0 0% 3.9%;
+        --primary: 0 0% 9%;
+        --primary-foreground: 0 0% 98%;
+        --secondary: 0 0% 96.1%;
+        --secondary-foreground: 0 0% 9%;
+        --muted: 0 0% 96.1%;
+        --muted-foreground: 0 0% 45.1%;
+        --accent: 0 0% 96.1%;
+        --accent-foreground: 0 0% 9%;
+        --destructive: 0 84.2% 60.2%;
+        --destructive-foreground: 0 0% 98%;
+        --border: 0 0% 89.8%;
+        --input: 0 0% 89.8%;
+        --ring: 0 0% 3.9%;
+        --radius: 0.5rem;
+        --focus-ring: 2px solid #e2a727;
+    }
+
+    .dark {
+        --background: 0 0% 12%;
+        --foreground: 0 0% 98%;
+        --card: 0 0% 12%;
+        --card-foreground: 0 0% 98%;
+        --popover: 0 0% 12%;
+        --popover-foreground: 0 0% 98%;
+        --primary: 0 0% 98%;
+        --primary-foreground: 0 0% 9%;
+        --secondary: 0 0% 14.9%;
+        --secondary-foreground: 0 0% 98%;
+        --muted: 0 0% 14.9%;
+        --muted-foreground: 0 0% 63.9%;
+        --accent: 0 0% 14.9%;
+        --accent-foreground: 0 0% 98%;
+        --destructive: 0 62.8% 30.6%;
+        --destructive-foreground: 0 0% 98%;
+        --border: 0 0% 14.9%;
+        --input: 0 0% 14.9%;
+        --ring: 0 0% 83.1%;
+    }
+
+    html {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    * {
+        border-color: hsl(var(--border));
+    }
+
+    body {
+        background-color: hsl(var(--background));
+        color: hsl(var(--foreground));
+        font-family: -apple-system, "SF Pro", "SF Pro Display", "SF Pro Text", BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    *:focus-visible {
+        outline: var(--focus-ring);
+        border-radius: 6px;
+    }
+
+    * {
+        caret-color: #e2a727;
+    }
+}
+
+@layer components {
+
+    /* Spinner animation */
+    .spinner {
+        animation: spin 1s linear infinite;
+    }
+
+    /* Layout */
+    .sidebar-layout {
+        display: flex;
+        height: 100dvh;
+    }
+
+    .sidebar {
+        width: 320px;
+        max-width: 320px;
+        border-right: 1px solid hsl(var(--muted-foreground) / 0.2);
+        height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        background-color: hsl(var(--muted));
+        flex-shrink: 0;
+    }
+
+    /* Override for mobile */
+    @media (max-width: 768px) {
+        .sidebar {
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+    }
+
+    .content-area {
+        flex: 1;
+        height: 100dvh;
+        overflow-y: auto;
+        min-width: 0;
+    }
+
+    /* Ensure text visibility in sidebar */
+    .sidebar h2,
+    .sidebar h3,
+    .sidebar .note-item-title {
+        color: hsl(var(--foreground));
+    }
+
+    .sidebar .note-item-preview {
+        color: hsl(var(--muted-foreground));
+    }
+
+    .sidebar .note-item-date {
+        color: hsl(var(--foreground));
+    }
+
+    .sidebar .sidebar-category-title {
+        color: hsl(var(--muted-foreground));
+    }
+
+    .note-item {
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+
+    .note-item:hover {
+        background-color: hsl(var(--muted-foreground) / 0.1);
+    }
+
+    .note-item-divider::after {
+        content: "";
+        display: block;
+        margin: 0 0.5rem;
+        border-top: 1px solid hsl(var(--muted-foreground) / 0.2);
+    }
+
+    .nav-container {
+        transition: box-shadow 0.2s;
+    }
+
+    .nav-container[data-scrolled="true"] {
+        border-bottom: 1px solid hsl(var(--muted-foreground) / 0.2);
+        box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.15);
+    }
+}
+
+@layer utilities {
+
+    /* Mobile styles */
+    @media (max-width: 768px) {
+        .sidebar {
+            width: 100% !important;
+            max-width: 100% !important;
+            border-right: none !important;
+            border-bottom: 1px solid hsl(var(--muted-foreground) / 0.2);
+        }
+
+        .sidebar>div {
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+
+        .sidebar-layout {
+            flex-direction: column !important;
+        }
+
+        .content-area {
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+
+        /* Show back button on mobile (only on note pages) */
+        .note-page .mobile-back-button {
+            display: flex !important;
+            visibility: visible !important;
+        }
+
+        /* Hide sidebar when on a note page on mobile */
+        .note-page .sidebar {
+            display: none !important;
+            visibility: hidden !important;
+            width: 0 !important;
+            max-width: 0 !important;
+            overflow: hidden !important;
+            position: absolute !important;
+            left: -9999px !important;
+        }
+
+        /* Ensure content area takes full width when sidebar is hidden */
+        .note-page .content-area {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin-left: 0 !important;
+        }
+
+        /* Ensure sidebar is visible on default page (list view) */
+        .sidebar-layout:not(.note-page) .sidebar {
+            display: flex !important;
+        }
+
+        /* Hide mobile back button on list page */
+        .sidebar-layout:not(.note-page) .mobile-back-button {
+            display: none !important;
+        }
+
+        /* Hide content area on mobile list page */
+        .sidebar-layout.list-page .content-area {
+            display: none !important;
+        }
+
+        /* Show content area on mobile note page */
+        .sidebar-layout.note-page .content-area {
+            display: block !important;
+        }
+
+        /* Override any w-[320px] classes on mobile */
+        .w-\[320px\] {
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+
+        /* Force all sidebar children to full width on mobile */
+        .sidebar .w-\[320px\] {
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+
+        /* Ensure sidebar scroll area takes full width */
+        #sidebar-scroll {
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+
+        #sidebar-scroll>div {
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+
+        #sidebar-scroll>div>div {
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+    }
+
+    /* Desktop styles */
+    @media (min-width: 769px) {
+        .mobile-back-button {
+            display: none !important;
+        }
+
+        .sidebar {
+            display: flex !important;
+        }
+    }
+
+    /* Mobile: Always show back button on note pages, regardless of .note-page class */
+    @media (max-width: 768px) {
+        .mobile-back-button {
+            display: none !important;
+            /* Hidden by default */
+        }
+
+        /* Show on note pages - use body class or direct override */
+        body.mobile .mobile-back-button {
+            display: flex !important;
+            visibility: visible !important;
+        }
+    }
+}

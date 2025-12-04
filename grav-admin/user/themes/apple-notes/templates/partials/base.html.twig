@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+{% set darkMode = grav.theme.config.dark_mode|default('disabled') %}
+<html lang="{{ (grav.language.getActive ?: grav.config.site.default_lang)|e }}" class="{% if darkMode == 'enabled' %}dark{% endif %}" data-theme-mode="{{ darkMode|e }}">
+
+    <head>
+        {% block head %}
+            <meta charset="utf-8" />
+            <title>{% if page.title %}{{ page.title|e('html') }} | {% endif %}{{ site.title|e('html') }}</title>
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            {% include 'partials/metadata.html.twig' %}
+            <link rel="icon" type="image/ico" href="{{ url('theme://images/favicon.ico')|e }}" />
+            <link rel="canonical" href="{{ page.url(true, true) }}" />
+
+            
+        {% endblock head %}
+        {% block stylesheets %}
+            {% do assets.addCss('theme://css/apple-notes.css', 100) %}
+            {% do assets.addCss('theme://css/github-markdown.css', 99) %}
+            {% do assets.addCss('theme://css/custom.css', 98) %}
+        {% endblock %}
+        {% block javascripts %}
+            {% do assets.addJs('theme://js/apple-notes.js', {'group': 'bottom', 'loading': 'defer'}) %}
+        {% endblock %}
+        {% block assets deferred %}
+            {{ assets.css()|raw }}
+            {{ assets.js('bottom')|raw }}
+        {% endblock %}
+    </head>
+    <body class="min-h-dvh font-sans antialiased bg-background text-foreground {{ page.header.body_classes|e }}">
+        {% block body %}
+            {% block content %}{% endblock %}
+        {% endblock %}
+    </body>
+</html>

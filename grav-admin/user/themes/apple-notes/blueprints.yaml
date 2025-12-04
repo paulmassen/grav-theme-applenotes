@@ -1,0 +1,41 @@
+name: Apple Notes
+slug: apple-notes
+type: theme
+version: 0.1.0
+description: Port of Apple Notes Theme from alanagoyal
+icon: rebel
+author:
+  name: Paul Massendari
+  email: paulmassendari@pm.me
+homepage: https://github.com/paulmassen/grav-theme-apple-notes
+demo: http://demo.yoursite.com
+keywords: grav, theme, etc
+bugs: https://github.com/paulmassen/grav-theme-apple-notes/issues
+readme: https://github.com/paulmassen/grav-theme-apple-notes/blob/develop/README.md
+license: MIT
+
+dependencies:
+  - { name: grav, version: '>=1.6.0' }
+
+form:
+  validation: loose
+  fields:
+    default_emoji:
+      type: text
+      label: Default Emoji
+      default: 📝
+      validate:
+        type: string
+        min: 1
+        max: 2
+    dark_mode:
+      type: select
+      label: Dark Mode
+      default: disabled
+      options:
+        disabled: Disabled
+        enabled: Enabled
+        auto: Auto
+      validate:
+        type: string
+

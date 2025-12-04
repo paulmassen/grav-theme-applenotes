@@ -1,0 +1,27 @@
+{% extends 'partials/base.html.twig' %}
+
+{% block body %}
+    <div class="sidebar-layout dark:text-white h-dvh flex list-page" id="sidebar-layout">
+        {# Sidebar: always visible on list page (default.html.twig) #}
+        <div id="sidebar-container" class="sidebar-container">
+            {% include 'partials/sidebar.html.twig' %}
+        </div>
+
+        <div class="flex-grow h-dvh content-area">
+            <div class="w-full min-h-dvh p-3">
+                <div class="h-full overflow-y-auto bg-background">
+                    {% if page.content %}
+                        {% include 'partials/note-header.html.twig' %}
+                        {% include 'partials/note-content.html.twig' %}
+                    {% else %}
+                        <div class="px-2 py-8 text-center text-muted-foreground">
+                            <p>
+                                Select a note from the sidebar to view it here.
+                            </p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

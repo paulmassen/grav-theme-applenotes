@@ -1,0 +1,33 @@
+extends@: default
+
+form:
+  fields:
+    tabs:
+      fields:
+        content:
+          type: tab
+          title: Content
+          fields:
+            header.emoji:
+              type: text
+              ordering@: 2
+              label: Emoji
+              default: 📝
+              help: The emoji to use for the note.
+              size: small
+              validate:
+                type: string
+                min: 1
+                max: 2
+            header.pinned:
+              type: toggle
+              ordering@: 3
+              label: Pinned
+              default: 0
+              help: Whether the note is pinned.
+              highlight: 0
+              options:
+                1: PLUGIN_ADMIN.YES
+                0: PLUGIN_ADMIN.NO
+              validate:
+                type: bool
