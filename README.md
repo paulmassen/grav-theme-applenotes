@@ -16,7 +16,7 @@ A beautiful, minimalist Grav theme inspired by Apple Notes, ported from the orig
 ## Screenshot
 
 <p align="center">
-  <img src="screenshot.jpg" alt="Apple Notes Theme Screenshot" width="500px" />
+  <img src="screenshot.jpg" alt="Apple Notes Theme Screenshot" width="800px" />
 </p>
 
 
