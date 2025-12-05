@@ -13,6 +13,13 @@ A beautiful, minimalist Grav theme inspired by Apple Notes, ported from the orig
 
 **Port to Grav**: This Grav theme port was created by [Paul Massendari](https://github.com/paulmassen).
 
+## Screenshot
+
+<p align="center">
+  <img src="screenshot.jpg" alt="Apple Notes Theme Screenshot" width="500px" />
+</p>
+
+
 ## Features
 
 - 🎨 **Apple Notes-inspired Design**: Clean, minimalist interface that mimics the Apple Notes aesthetic
