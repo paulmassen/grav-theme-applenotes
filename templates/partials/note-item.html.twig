@@ -1,8 +1,11 @@
 {% set isSelected = (selectedNoteSlug == item.slug) %}
 {% set isHighlighted = (isSearching and highlightedIndex is defined and highlightedIndex == loop.index0) or (not isSearching and isSelected) %}
 {% set preview = item.content|striptags|replace({'![': '', '](': '', ')': '', '[': '', ']': '', '#': '', '*': '', '_': '', '~': '', '`': '', '>': '', '+': '', '-': ''})|replace({'\n\n': ' ', '\n': ' '})|trim|slice(0, 100) %}
-{% set displayDate = item.date|date('M d, Y') %}
-<li tabindex="0" class="note-item h-[70px] w-full {% if isHighlighted %}bg-[#FFE390] dark:bg-[#9D7D28] dark:text-white rounded-md{% endif %} {% if showDivider and not isHighlighted %}note-item-divider{% endif %}" data-note-slug="{{ item.slug }}" data-note-id="{{ item.id }}">
+{% set noteDateValue = item.date ? item.date : (item.modified ? item.modified : null) %}
+{% set displayDate = noteDateValue ? noteDateValue|date('M d, Y') : '' %}
+{% set lastModified = noteDateValue ? noteDateValue|date('Y-m-d') : '' %}
+{% set isPinned = item.header.pinned is defined and item.header.pinned == true %}
+<li tabindex="0" class="note-item h-[70px] w-full {% if isHighlighted %}bg-[#FFE390] dark:bg-[#9D7D28] dark:text-white rounded-md{% endif %} {% if showDivider and not isHighlighted %}note-item-divider{% endif %}" data-note-slug="{{ item.slug }}" data-note-id="{{ item.id }}" data-last-modified="{{ lastModified }}" data-pinned="{{ isPinned ? 'true' : 'false' }}">
     <div class="h-full w-full px-4">
         <a href="{{ item.url }}" class="py-2 h-full w-full flex flex-col justify-center">
             <h2 class="text-sm font-bold px-2 break-words line-clamp-1 note-item-title">
@@ -10,9 +13,11 @@
                 {{ item.title }}
             </h2>
             <p class="text-xs pl-2 break-words line-clamp-1 note-item-preview {% if isHighlighted %}text-muted-foreground dark:text-white/80{% else %}text-muted-foreground{% endif %}">
+                {% if displayDate %}
                 <span class="note-item-date">
                     {{ displayDate }}
                 </span>
+                {% endif %}
                 {{ preview }}
             </p>
         </a>

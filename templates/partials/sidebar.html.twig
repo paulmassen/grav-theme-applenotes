@@ -1,4 +1,22 @@
-{% set notes = page.parent ? page.parent.children().order('date', 'desc') : pages.children().order('date', 'desc') %}
+{% if page.parent %}
+    {% set allNotes = page.parent.children %}
+{% else %}
+    {% set allNotes = pages.root.children %}
+{% endif %}
+{% set notes = [] %}
+{% for note in allNotes %}
+    {# Filtrer uniquement les pages avec published: false ou visible: false #}
+    {% set skip = false %}
+    {% if note.header.published is defined and note.header.published == false %}
+        {% set skip = true %}
+    {% endif %}
+    {% if note.header.visible is defined and note.header.visible == false %}
+        {% set skip = true %}
+    {% endif %}
+    {% if not skip %}
+        {% set notes = notes|merge([note]) %}
+    {% endif %}
+{% endfor %}
 {% set currentSlug = page.slug %}
 <div class="sidebar w-[320px] border-r border-muted-foreground/20 h-dvh flex flex-col dark:bg-muted" id="sidebar">
     <div class="w-[320px]">
@@ -22,80 +40,19 @@
                     </div>
                 </div>
                 <div class="py-2" id="notes-list">
-                    <nav>
-                        {% set groupedNotes = {} %}
-                        {% set pinnedNotes = [] %}
-                        {% set today = "now"|date("Y-m-d") %}
-                        {% set yesterday = "now"|date_modify("-1 day")|date("Y-m-d") %}
-                        {% set sevenDaysAgo = "now"|date_modify("-7 days")|date("Y-m-d") %}
-                        {% set thirtyDaysAgo = "now"|date_modify("-30 days")|date("Y-m-d") %}
+                    <nav id="notes-container">
+                        {# Afficher toutes les pages avec leurs données - JavaScript fera le tri #}
                         {% for note in notes %}
-                            {% set noteDate = note.date|date("Y-m-d") %}
-                            {% set category = 'older' %}
-                            {% if note.header.pinned %}
-                                {% set pinnedNotes = (pinnedNotes ?? [])|merge([note]) %}
-                            {% elseif noteDate == today %}
-                                {% set category = 'today' %}
-                            {% elseif noteDate == yesterday %}
-                                {% set category = 'yesterday' %}
-                            {% elseif noteDate >= sevenDaysAgo %}
-                                {% set category = '7' %}
-                            {% elseif noteDate >= thirtyDaysAgo %}
-                                {% set category = '30' %}
-                            {% endif %}
-                            {% if not note.header.pinned %}
-                                {% if groupedNotes[category] is not defined %}
-                                    {% set groupedNotes = (groupedNotes ?? {})|merge({(category): []}) %}
-                                {% endif %}
-                                {% set groupedNotes = (groupedNotes ?? {})|merge({(category): (groupedNotes[category] ?? [])|merge([note])}) %}
-                            {% endif %}
-                        {% endfor %}
-                        {% if pinnedNotes|length > 0 %}
-                            <section>
-                                <h3 class="py-1 text-xs font-bold sidebar-category-title ml-2">
-                                    📌 Pinned
-                                </h3>
-                                <ul>
-                                    {% for item in pinnedNotes %}
-                                        {% include 'partials/note-item.html.twig' with {
-                                            'item': item,
-                                            'selectedNoteSlug': currentSlug,
-                                            'isSearching': false,
-                                            'highlightedIndex': 0,
-                                            'showDivider': loop.index < pinnedNotes|length
-                                        } %}
-                                    {% endfor %}
-                                </ul>
-                            </section>
-                        {% endif %}
-                        {% set categoryOrder = ['today', 'yesterday', '7', '30', 'older'] %}
-                        {% set categoryLabels = {
-                            'today': 'Today',
-                            'yesterday': 'Yesterday',
-                            '7': 'Previous 7 Days',
-                            '30': 'Previous 30 Days',
-                            'older': 'Older'
-                        } %}
-                        {% for category in categoryOrder %}
-                            {% if groupedNotes[category] is defined and groupedNotes[category]|length > 0 %}
-                                <section>
-                                    <h3 class="py-1 text-xs font-bold sidebar-category-title ml-2">
-                                        {{ categoryLabels[category] }}
-                                    </h3>
-                                    <ul>
-                                        {% for item in groupedNotes[category] %}
-                                            {% include 'partials/note-item.html.twig' with {
-                                            'item': item,
-                                            'selectedNoteSlug': currentSlug,
-                                            'isSearching': false,
-                                            'highlightedIndex': 0,
-                                            'showDivider': loop.index < groupedNotes[category]|length,
-                                            'loop': loop
-                                        } %}
-                                        {% endfor %}
-                                    </ul>
-                                </section>
-                            {% endif %}
+                            {% set noteDateValue = note.date ? note.date : (note.modified ? note.modified : null) %}
+                            {% set noteDate = noteDateValue ? noteDateValue|date("Y-m-d") : '' %}
+                            {% set noteTimestamp = noteDateValue ? noteDateValue|date("U") : 0 %}
+                            {% include 'partials/note-item.html.twig' with {
+                                'item': note,
+                                'selectedNoteSlug': currentSlug,
+                                'isSearching': false,
+                                'highlightedIndex': 0,
+                                'showDivider': false
+                            } %}
                         {% endfor %}
                     </nav>
                 </div>
@@ -211,3 +168,130 @@
     color: hsl(var(--muted-foreground));
 }
 </style>
+<script>
+(function() {
+    const notesContainer = document.getElementById('notes-container');
+    if (!notesContainer) return;
+
+    const notes = Array.from(notesContainer.querySelectorAll('.note-item'));
+    if (notes.length === 0) return;
+
+    // Séparer les pages épinglées et les autres
+    const pinnedNotes = notes.filter(note => note.dataset.pinned === 'true');
+    const unpinnedNotes = notes.filter(note => note.dataset.pinned !== 'true');
+
+    // Fonction pour obtenir la catégorie d'une date
+    function getCategory(dateStr) {
+        if (!dateStr) return 'older';
+        
+        // Parser la date YYYY-MM-DD en évitant les problèmes de timezone
+        const [year, month, day] = dateStr.split('-').map(Number);
+        const noteDate = new Date(year, month - 1, day);
+        noteDate.setHours(0, 0, 0, 0);
+        
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        
+        const yesterday = new Date(today);
+        yesterday.setDate(yesterday.getDate() - 1);
+        yesterday.setHours(0, 0, 0, 0);
+        
+        const sevenDaysAgo = new Date(today);
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+        sevenDaysAgo.setHours(0, 0, 0, 0);
+        
+        const thirtyDaysAgo = new Date(today);
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+        thirtyDaysAgo.setHours(0, 0, 0, 0);
+        
+        // Comparer les timestamps pour éviter les problèmes de comparaison d'objets Date
+        const noteTime = noteDate.getTime();
+        const todayTime = today.getTime();
+        const yesterdayTime = yesterday.getTime();
+        const sevenDaysAgoTime = sevenDaysAgo.getTime();
+        const thirtyDaysAgoTime = thirtyDaysAgo.getTime();
+        
+        if (noteTime === todayTime) return 'today';
+        if (noteTime === yesterdayTime) return 'yesterday';
+        if (noteTime >= sevenDaysAgoTime && noteTime < yesterdayTime) return '7';
+        if (noteTime >= thirtyDaysAgoTime && noteTime < sevenDaysAgoTime) return '30';
+        return 'older';
+    }
+
+    // Grouper les notes non épinglées par catégorie
+    const groupedNotes = {
+        'today': [],
+        'yesterday': [],
+        '7': [],
+        '30': [],
+        'older': []
+    };
+
+    unpinnedNotes.forEach(note => {
+        const category = getCategory(note.dataset.lastModified);
+        groupedNotes[category].push(note);
+    });
+
+    // Trier chaque groupe par date (plus récent en premier)
+    Object.keys(groupedNotes).forEach(category => {
+        groupedNotes[category].sort((a, b) => {
+            const dateA = a.dataset.lastModified || '';
+            const dateB = b.dataset.lastModified || '';
+            return dateB.localeCompare(dateA);
+        });
+    });
+
+    // Vider le conteneur
+    notesContainer.innerHTML = '';
+
+    // Labels des catégories
+    const categoryLabels = {
+        'today': 'Today',
+        'yesterday': 'Yesterday',
+        '7': 'Previous 7 Days',
+        '30': 'Previous 30 Days',
+        'older': 'Older'
+    };
+
+    // Afficher les pages épinglées
+    if (pinnedNotes.length > 0) {
+        const pinnedSection = document.createElement('section');
+        const pinnedTitle = document.createElement('h3');
+        pinnedTitle.className = 'py-1 text-xs font-bold sidebar-category-title ml-2';
+        pinnedTitle.textContent = '📌 Pinned';
+        pinnedSection.appendChild(pinnedTitle);
+        
+        const pinnedList = document.createElement('ul');
+        pinnedNotes.forEach((note, index) => {
+            if (index < pinnedNotes.length - 1) {
+                note.classList.add('note-item-divider');
+            }
+            pinnedList.appendChild(note);
+        });
+        pinnedSection.appendChild(pinnedList);
+        notesContainer.appendChild(pinnedSection);
+    }
+
+    // Afficher les autres catégories dans l'ordre
+    const categoryOrder = ['today', 'yesterday', '7', '30', 'older'];
+    categoryOrder.forEach(category => {
+        if (groupedNotes[category].length > 0) {
+            const section = document.createElement('section');
+            const title = document.createElement('h3');
+            title.className = 'py-1 text-xs font-bold sidebar-category-title ml-2';
+            title.textContent = categoryLabels[category];
+            section.appendChild(title);
+            
+            const list = document.createElement('ul');
+            groupedNotes[category].forEach((note, index) => {
+                if (index < groupedNotes[category].length - 1) {
+                    note.classList.add('note-item-divider');
+                }
+                list.appendChild(note);
+            });
+            section.appendChild(list);
+            notesContainer.appendChild(section);
+        }
+    });
+})();
+</script>
