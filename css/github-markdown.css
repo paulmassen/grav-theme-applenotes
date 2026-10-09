@@ -83,20 +83,38 @@
   list-style-type: square;
 }
 
-.markdown-body ul.contains-task-list {
+/* Task lists. The theme adds .contains-task-list to lists starting with a task; :has() covers the others. */
+.markdown-body ul.contains-task-list,
+.markdown-body ol.contains-task-list,
+.markdown-body ul:has(> li.task-list-item),
+.markdown-body ol:has(> li.task-list-item) {
   list-style-type: none;
   padding-left: 0;
 }
 
 /* Nested task lists should have indentation */
-.markdown-body ul.contains-task-list ul.contains-task-list {
+.markdown-body li ul.contains-task-list,
+.markdown-body li ol.contains-task-list,
+.markdown-body li ul:has(> li.task-list-item),
+.markdown-body li ol:has(> li.task-list-item) {
   padding-left: 2em;
 }
 
 .markdown-body .task-list-item {
   display: flex;
+  flex-wrap: wrap;
   align-items: flex-start;
   margin-bottom: 0.5em;
+}
+
+/* A sub-list inside a task goes below the task text, not next to it */
+.markdown-body .task-list-item > ul,
+.markdown-body .task-list-item > ol {
+  flex-basis: 100%;
+}
+
+.markdown-body .task-list-item > p {
+  margin-bottom: 0;
 }
 
 .markdown-body .task-list-item input[type="checkbox"] {

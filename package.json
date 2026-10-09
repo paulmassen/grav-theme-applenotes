@@ -1,6 +1,6 @@
 {
   "name": "apple-notes-theme",
-  "version": "0.1.0",
+  "version": "1.2.0",
   "private": true,
   "scripts": {
     "build": "cross-env NODE_ENV=development tailwindcss -i ./css/source.css -o ./css/apple-notes.css --postcss",
@@ -16,6 +16,8 @@
     "tailwindcss-animate": "^1.0.7"
   }
 }
+
+
 
 
 

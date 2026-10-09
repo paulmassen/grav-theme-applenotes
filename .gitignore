@@ -4,8 +4,9 @@ node_modules/
 # Ignore build artifacts
 .DS_Store
 package-lock.json
-css/apple-notes.css
 
 # Keep git files
 !.git/
 !.gitignore
+
+

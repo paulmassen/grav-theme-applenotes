@@ -1,7 +1,6 @@
 <!DOCTYPE html>
-{% set darkMode = grav.theme.config.dark_mode|default('disabled') %}
-<html lang="{{ (grav.language.getActive ?: grav.config.site.default_lang)|e }}" class="{% if darkMode == 'enabled' %}dark{% endif %}" data-theme-mode="{{ darkMode|e }}">
-
+{% set dark_mode = config.theme.dark_mode|default('disabled') %}
+<html lang="{{ (grav.language.getActive ?: grav.config.site.default_lang ?: 'en')|e }}" class="{{ dark_mode == 'enabled' ? 'dark' : '' }}" data-theme-mode="{{ dark_mode|e }}">
     <head>
         {% block head %}
             <meta charset="utf-8" />
@@ -9,27 +8,58 @@
             <meta http-equiv="X-UA-Compatible" content="IE=edge">
             <meta name="viewport" content="width=device-width, initial-scale=1">
             {% include 'partials/metadata.html.twig' %}
-            <link rel="icon" type="image/ico" href="{{ url('theme://images/favicon.ico')|e }}" />
-            <link rel="canonical" href="{{ page.url(true, true) }}" />
-
-            
+            <link rel="icon" type="image/x-icon" href="{{ url('theme://images/favicon.ico')|e }}" />
+            <link rel="canonical" href="{{ page.url(true, true)|e }}" />
+            {# Applies the colour scheme before the first paint to avoid a flash of the light theme. #}
+            <script>
+                (function () {
+                    var root = document.documentElement;
+                    var mode = root.getAttribute('data-theme-mode');
+                    if (mode === 'disabled') { root.classList.remove('dark'); return; }
+                    var stored = null;
+                    try { stored = localStorage.getItem('apple-notes-theme'); } catch (e) {}
+                    var dark = stored ? stored === 'dark'
+                        : mode === 'enabled' || (mode === 'auto' && !!window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+                    root.classList.toggle('dark', dark);
+                })();
+            </script>
         {% endblock head %}
+
         {% block stylesheets %}
             {% do assets.addCss('theme://css/apple-notes.css', 100) %}
             {% do assets.addCss('theme://css/github-markdown.css', 99) %}
             {% do assets.addCss('theme://css/custom.css', 98) %}
         {% endblock %}
+
         {% block javascripts %}
-            {% do assets.addJs('theme://js/apple-notes.js', {'group': 'bottom', 'loading': 'defer'}) %}
+            {% do assets.addJs('theme://js/apple-notes.js', {group: 'bottom', loading: 'defer'}) %}
         {% endblock %}
+
         {% block assets deferred %}
             {{ assets.css()|raw }}
-            {{ assets.js('bottom')|raw }}
+            {{ assets.js()|raw }}
         {% endblock %}
     </head>
     <body class="min-h-dvh font-sans antialiased bg-background text-foreground {{ page.header.body_classes|e }}">
         {% block body %}
-            {% block content %}{% endblock %}
+            {# "list" view (home page): on mobile only the notes list is shown. "note" view: only the note. #}
+            {% set layout_view = layout_view|default(page.home ? 'list' : 'note') %}
+            <div id="sidebar-layout" class="sidebar-layout dark:text-white h-dvh flex {{ layout_view }}-page" data-view="{{ layout_view }}">
+                <div id="sidebar-container" class="sidebar-container">
+                    {% block sidebar %}
+                        {% include 'partials/sidebar.html.twig' %}
+                    {% endblock %}
+                </div>
+
+                <main id="content" class="flex-grow h-dvh content-area">
+                    {% include 'partials/mobile-back-button.html.twig' %}
+                    {% block content %}{% endblock %}
+                </main>
+            </div>
+        {% endblock %}
+
+        {% block bottom %}
+            {{ assets.js('bottom')|raw }}
         {% endblock %}
     </body>
 </html>

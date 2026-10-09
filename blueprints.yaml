@@ -1,21 +1,24 @@
 name: Apple Notes
 slug: apple-notes
 type: theme
-version: 1.1.0
-description: Port of Apple Notes Theme from alanagoyal
-icon: rebel
+version: 1.2.0
+description: Port of the Apple Notes theme from alanagoyal for Grav CMS
+icon: sticky-note
 author:
   name: Paul Massendari
   email: paulmassendari@pm.me
-homepage: https://github.com/paulmassen/grav-theme-apple-notes
+homepage: https://github.com/paulmassen/grav-theme-applenotes
 demo: https://notes.paulmassendari.dev
-keywords: grav, theme, etc
-bugs: https://github.com/paulmassen/grav-theme-apple-notes/issues
-readme: https://github.com/paulmassen/grav-theme-apple-notes/blob/develop/README.md
+keywords: grav, theme, notes, apple notes, minimal, dark mode, tailwind
+bugs: https://github.com/paulmassen/grav-theme-applenotes/issues
+readme: https://github.com/paulmassen/grav-theme-applenotes/blob/main/README.md
 license: MIT
 
+compatibility:
+  grav: ['1.7', '2.0']
+
 dependencies:
-  - { name: grav, version: '>=1.6.0' }
+  - { name: grav, version: '>=1.7.0' }
   - { name: tntsearch, version: '>=3.0.0' }
 
 form:
@@ -24,19 +27,22 @@ form:
     default_emoji:
       type: text
       label: Default Emoji
+      help: Emoji shown for notes that do not define their own `emoji` in the frontmatter.
       default: 📝
+      size: small
       validate:
         type: string
         min: 1
-        max: 2
+        max: 16
     dark_mode:
       type: select
       label: Dark Mode
+      help: "Disabled: always light. Enabled: dark by default. Auto: follows the visitor's system preference. Except when disabled, visitors can switch with the `t` key and their choice is remembered."
       default: disabled
+      size: small
       options:
         disabled: Disabled
         enabled: Enabled
         auto: Auto
       validate:
         type: string
-

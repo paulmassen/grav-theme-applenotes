@@ -26,17 +26,21 @@ A beautiful, minimalist Grav theme inspired by Apple Notes, ported from the orig
 - 📝 **Markdown Support**: Full GitHub Flavored Markdown support with syntax highlighting
 - 🌓 **Dark Mode**: Three modes available - disabled, enabled, or auto (follows system preference)
 - 📱 **Responsive Design**: Fully responsive with mobile-optimized sidebar and navigation
-- 🔍 **Search Integration**: Built-in TNTSearch integration for fast note searching
-- ⌨️ **Keyboard Shortcuts**: Navigate notes with `j`/`k` or arrow keys, toggle theme with `t`
+- 🔍 **Search**: Full-text search through TNTSearch, with a built-in fallback that filters titles and excerpts when the plugin is not installed
+- ⌨️ **Keyboard Shortcuts**: Navigate notes with `j`/`k` or arrow keys, `/` to search, toggle theme with `t`
 - 📌 **Pinned Notes**: Pin important notes to the top of your sidebar
 - 📅 **Smart Grouping**: Notes automatically grouped by date (Today, Yesterday, Previous 7 Days, etc.)
 - 🎯 **Emoji Support**: Custom emoji per note with configurable default emoji
+- ✅ **Task Lists**: `- [ ]` / `- [x]` items are rendered as Apple Notes-style checkboxes
+- 🤖 **Grav 2 ready**: works on Grav 1.7 and Grav 2.x (Admin 2, Markdown output for AI agents)
 
 ## Requirements
 
-- Grav 1.6.0 or higher
-- PHP 7.4 or higher
-- [TNTSearch Plugin](https://github.com/trilbymedia/grav-plugin-tntsearch) (recommended for search functionality)
+- Grav 1.7 or Grav 2.x
+- PHP 7.3.6+ on Grav 1.7, PHP 8.3+ on Grav 2
+- [TNTSearch Plugin](https://github.com/trilbymedia/grav-plugin-tntsearch) 3.x (installed automatically by GPM; without it the search only filters titles and excerpts)
+
+After installing TNTSearch, build its index once: `bin/plugin tntsearch index`.
 
 ## Installation
 
@@ -48,7 +52,7 @@ bin/gpm install apple-notes
 
 ### Manual Installation
 
-1. Download the theme from the [GitHub releases page](https://github.com/paulmassen/grav-theme-apple-notes/releases)
+1. Download the theme from the [GitHub releases page](https://github.com/paulmassen/grav-theme-applenotes/releases)
 2. Extract the zip file to `user/themes/`
 3. Rename the folder to `apple-notes`
 
@@ -60,18 +64,20 @@ bin/gpm install apple-notes
 
 ## Configuration
 
-The theme can be configured through the Grav Admin panel or by editing `user/themes/apple-notes/apple-notes.yaml`:
+The theme can be configured through the Grav Admin panel or in `user/config/themes/apple-notes.yaml` (do not edit the file inside the theme folder, it is replaced on updates):
 
 ```yaml
-default_emoji: '📝'  # Default emoji for new notes
+default_emoji: '📝'  # Emoji used for notes without an `emoji` in their frontmatter
 dark_mode: 'auto'    # Options: 'disabled', 'enabled', 'auto'
 ```
 
 ### Dark Mode Options
 
 - **disabled**: Always use light mode
-- **enabled**: Always use dark mode
+- **enabled**: Dark mode by default
 - **auto**: Automatically follow system preference
+
+With `enabled` and `auto`, visitors can switch with the `t` key; their choice is remembered in the browser.
 
 ## Development
 
@@ -101,7 +107,9 @@ npm run watch
 npm run prod
 ```
 
-**Important**: The `css/apple-notes.css` file is auto-generated. Only edit `css/source.css` and rebuild.
+**Important**: The `css/apple-notes.css` file is auto-generated (and committed, so the theme works without a build step). Only edit `css/source.css` and rebuild.
+
+If `npm run build` fails with `Cannot find module './cli/index'`, your `node_modules/.bin` links are broken: delete `node_modules` and run `npm install` again.
 
 ## Structure
 
@@ -118,8 +126,8 @@ apple-notes/
 │   └── apple-notes.js   # Theme JavaScript
 ├── templates/           # Twig templates
 │   ├── default.html.twig
-│   ├── note.html.twig
-│   └── partials/       # Template partials
+│   ├── error.html.twig
+│   └── partials/       # Template partials (base.html.twig holds the sidebar layout)
 └── package.json        # Node dependencies
 ```
 
@@ -151,7 +159,8 @@ Your markdown content here...
 
 - `j` or `↓`: Navigate to next note
 - `k` or `↑`: Navigate to previous note
-- `t`: Toggle dark/light theme
+- `/`: Focus the search field (`Enter` opens the first result)
+- `t`: Toggle dark/light theme (unless dark mode is disabled)
 - `Esc`: Clear search or blur input
 
 ## Customization
@@ -174,13 +183,13 @@ Edit `css/source.css` to customize the color scheme. The theme uses CSS custom p
 }
 ```
 
-### Debugging
+### "New note" button
 
-To enable TNTSearch debugging, edit `js/apple-notes.js`:
+The pencil button in the sidebar does nothing by default. Define `window.createNewNote()` in your own script, or listen to the `apple-notes:new-note` event on `document`, to give it a behaviour (for example, open the admin).
 
-```javascript
-const TNTSearch_DEBUG = true;  // Change to true
-```
+### Mobile layout
+
+On small screens the home page shows the notes list and every other page shows the note, with a **Notes** back button. Plugin pages that extend `partials/base.html.twig` and fill `{% block content %}` are rendered in the same layout.
 
 ## Browser Support
 
@@ -204,8 +213,8 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## Support
 
-- **Issues**: [GitHub Issues](https://github.com/paulmassen/grav-theme-apple-notes/issues)
-- **Documentation**: [GitHub Wiki](https://github.com/paulmassen/grav-theme-apple-notes/wiki)
+- **Issues**: [GitHub Issues](https://github.com/paulmassen/grav-theme-applenotes/issues)
+- **Documentation**: [GitHub Wiki](https://github.com/paulmassen/grav-theme-applenotes/wiki)
 
 ## Changelog
 

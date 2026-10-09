@@ -644,20 +644,23 @@ body {
   flex-shrink: 0;
 }
 
-/* Override for mobile */
-
-@media (max-width: 768px) {
-  .sidebar {
-    width: 100% !important;
-    max-width: 100% !important;
-  }
-}
-
 .content-area {
   flex: 1;
   height: 100dvh;
   overflow-y: auto;
   min-width: 0;
+}
+
+/* Only displayed on mobile, in the note view (see the media query below). */
+
+.mobile-back-button {
+  display: none;
+}
+
+/* Note title (an <h1>, so that it is the page heading for assistive technologies and Markdown output) */
+
+.content-area .note-title {
+  color: inherit;
 }
 
 /* Ensure text visibility in sidebar */
@@ -676,6 +679,10 @@ body {
   color: hsl(var(--foreground));
 }
 
+.dark .sidebar .note-item-date {
+  color: #fff;
+}
+
 .sidebar .sidebar-category-title {
   color: hsl(var(--muted-foreground));
 }
@@ -687,6 +694,20 @@ body {
 
 .note-item:hover {
   background-color: hsl(var(--muted-foreground) / 0.1);
+}
+
+.note-item.is-selected {
+  background-color: #FFE390;
+  border-radius: 0.375rem;
+}
+
+.dark .note-item.is-selected {
+  background-color: #9D7D28;
+  color: #fff;
+}
+
+.dark .sidebar .note-item.is-selected .note-item-preview {
+  color: rgb(255 255 255 / 0.8);
 }
 
 .note-item-divider::after {
@@ -709,6 +730,10 @@ body {
   pointer-events: none;
 }
 
+.\!visible {
+  visibility: visible !important;
+}
+
 .visible {
   visibility: visible;
 }
@@ -721,21 +746,16 @@ body {
   position: relative;
 }
 
-.inset-y-0 {
-  top: 0px;
-  bottom: 0px;
-}
-
-.left-0 {
-  left: 0px;
+.left-2 {
+  left: 0.5rem;
 }
 
 .right-2 {
   right: 0.5rem;
 }
 
-.top-1 {
-  top: 0.25rem;
+.top-1\/2 {
+  top: 50%;
 }
 
 .mb-2 {
@@ -754,12 +774,12 @@ body {
   margin-left: 0.5rem;
 }
 
-.mr-1 {
-  margin-right: 0.25rem;
-}
-
 .mr-2 {
   margin-right: 0.5rem;
+}
+
+.mt-4 {
+  margin-top: 1rem;
 }
 
 .line-clamp-1 {
@@ -773,12 +793,12 @@ body {
   display: block;
 }
 
-.flex {
-  display: flex;
+.inline {
+  display: inline;
 }
 
-.inline-flex {
-  display: inline-flex;
+.flex {
+  display: flex;
 }
 
 .hidden {
@@ -791,6 +811,10 @@ body {
 
 .h-6 {
   height: 1.5rem;
+}
+
+.h-\[2\.4rem\] {
+  height: 2.4rem;
 }
 
 .h-\[70px\] {
@@ -833,17 +857,13 @@ body {
   flex-grow: 1;
 }
 
-.-translate-y-1 {
-  --tw-translate-y: -0.25rem;
+.-translate-y-1\/2 {
+  --tw-translate-y: -50%;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
 .-translate-y-\[0\.5px\] {
   --tw-translate-y: -0.5px;
-  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-}
-
-.transform {
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
@@ -903,17 +923,8 @@ body {
   border-right-width: 1px;
 }
 
-.border-none {
-  border-style: none;
-}
-
 .border-muted-foreground\/20 {
   border-color: hsl(var(--muted-foreground) / 0.2);
-}
-
-.bg-\[\#FFE390\] {
-  --tw-bg-opacity: 1;
-  background-color: rgb(255 227 144 / var(--tw-bg-opacity, 1));
 }
 
 .bg-background {
@@ -923,10 +934,6 @@ body {
 .bg-green-500 {
   --tw-bg-opacity: 1;
   background-color: rgb(34 197 94 / var(--tw-bg-opacity, 1));
-}
-
-.bg-muted-foreground {
-  background-color: hsl(var(--muted-foreground));
 }
 
 .bg-red-500 {
@@ -947,24 +954,19 @@ body {
   padding: 0.75rem;
 }
 
+.px-1 {
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+}
+
 .px-2 {
   padding-left: 0.5rem;
   padding-right: 0.5rem;
 }
 
-.px-2\.5 {
-  padding-left: 0.625rem;
-  padding-right: 0.625rem;
-}
-
 .px-4 {
   padding-left: 1rem;
   padding-right: 1rem;
-}
-
-.py-0 {
-  padding-top: 0px;
-  padding-bottom: 0px;
 }
 
 .py-0\.5 {
@@ -1025,6 +1027,11 @@ body {
   line-height: 1.5rem;
 }
 
+.text-lg {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+
 .text-sm {
   font-size: 0.875rem;
   line-height: 1.25rem;
@@ -1041,10 +1048,6 @@ body {
 
 .font-medium {
   font-weight: 500;
-}
-
-.font-semibold {
-  font-weight: 600;
 }
 
 .leading-none {
@@ -1072,11 +1075,6 @@ body {
   color: hsl(var(--muted-foreground));
 }
 
-.text-white {
-  --tw-text-opacity: 1;
-  color: rgb(255 255 255 / var(--tw-text-opacity, 1));
-}
-
 .antialiased {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -1086,10 +1084,13 @@ body {
   opacity: 0;
 }
 
-.transition {
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
+.blur {
+  --tw-blur: blur(8px);
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+}
+
+.filter {
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 
 @keyframes enter {
@@ -1106,142 +1107,108 @@ body {
   }
 }
 
-/* Mobile styles */
-
-@media (max-width: 768px) {
-  .sidebar {
-    width: 100% !important;
-    max-width: 100% !important;
-    border-right: none !important;
-    border-bottom: 1px solid hsl(var(--muted-foreground) / 0.2);
-  }
-
-  .sidebar>div {
-    width: 100% !important;
-    max-width: 100% !important;
-  }
-
-  .sidebar-layout {
-    flex-direction: column !important;
-  }
-
-  .content-area {
-    width: 100% !important;
-    max-width: 100% !important;
-  }
-
-  /* Show back button on mobile (only on note pages) */
-
-  .note-page .mobile-back-button {
-    display: flex !important;
-    visibility: visible !important;
-  }
-
-  /* Hide sidebar when on a note page on mobile */
-
-  .note-page .sidebar {
-    display: none !important;
-    visibility: hidden !important;
-    width: 0 !important;
-    max-width: 0 !important;
-    overflow: hidden !important;
-    position: absolute !important;
-    left: -9999px !important;
-  }
-
-  /* Ensure content area takes full width when sidebar is hidden */
-
-  .note-page .content-area {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin-left: 0 !important;
-  }
-
-  /* Ensure sidebar is visible on default page (list view) */
-
-  .sidebar-layout:not(.note-page) .sidebar {
-    display: flex !important;
-  }
-
-  /* Hide mobile back button on list page */
-
-  .sidebar-layout:not(.note-page) .mobile-back-button {
-    display: none !important;
-  }
-
-  /* Hide content area on mobile list page */
-
-  .sidebar-layout.list-page .content-area {
-    display: none !important;
-  }
-
-  /* Show content area on mobile note page */
-
-  .sidebar-layout.note-page .content-area {
-    display: block !important;
-  }
-
-  /* Override any w-[320px] classes on mobile */
-
-  .w-\[320px\] {
-    width: 100% !important;
-    max-width: 100% !important;
-  }
-
-  /* Force all sidebar children to full width on mobile */
-
-  .sidebar .w-\[320px\] {
-    width: 100% !important;
-    max-width: 100% !important;
-  }
-
-  /* Ensure sidebar scroll area takes full width */
-
-  #sidebar-scroll {
-    width: 100% !important;
-    max-width: 100% !important;
-  }
-
-  #sidebar-scroll>div {
-    width: 100% !important;
-    max-width: 100% !important;
-  }
-
-  #sidebar-scroll>div>div {
-    width: 100% !important;
-    max-width: 100% !important;
-  }
-}
-
-/* Desktop styles */
-
-@media (min-width: 769px) {
-  .mobile-back-button {
-    display: none !important;
-  }
-
-  .sidebar {
-    display: flex !important;
-  }
-}
-
-/* Mobile: Always show back button on note pages, regardless of .note-page class */
-
-@media (max-width: 768px) {
-  .mobile-back-button {
-    display: none !important;
-    /* Hidden by default */
-  }
-
-  /* Show on note pages - use body class or direct override */
-
-  body.mobile .mobile-back-button {
-    display: flex !important;
-    visibility: visible !important;
-  }
+.running {
+  animation-play-state: running;
 }
 
 /* Variables CSS pour le thème */
+
+/* Rules below are kept outside @layer so that Tailwind never tree-shakes them. */
+
+/* Sidebar search: the theme draws its own clear button */
+
+.notes-search-input::-webkit-search-cancel-button,
+.notes-search-input::-webkit-search-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* TNTSearch's own search page (used when the sidebar form is submitted without JavaScript) */
+
+.content-area .tntsearch-form {
+  padding: 0.75rem 1.25rem;
+  max-width: 980px;
+}
+
+.content-area .tntsearch-field {
+  width: 100%;
+  height: 2.4rem;
+  padding: 0.125rem 0.75rem;
+  border: 1px solid hsl(var(--muted-foreground) / 0.2);
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.dark .content-area .tntsearch-field {
+  border-color: transparent;
+  background-color: #353533;
+}
+
+.content-area .tntsearch-results {
+  font-size: 0.875rem;
+}
+
+.content-area .tntsearch-results .title {
+  margin: 1rem 0 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.content-area .tntsearch-results .title a {
+  color: #e2a727;
+}
+
+.content-area .tntsearch-results .route {
+  margin: 0;
+  font-size: 0.75rem;
+  color: hsl(var(--muted-foreground));
+}
+
+.content-area .tntsearch-results .row > p {
+  margin: 0.25rem 0 0;
+}
+
+.dark .content-area .tntsearch-results em {
+  color: #1c1c1c;
+}
+
+/*
+ * Mobile: the home page shows the notes list ("list" view), every other page shows the note
+ * ("note" view) with a "Notes" back button that reveals the list (.sidebar-open, toggled by JS).
+ */
+
+@media (max-width: 768px) {
+  .sidebar-layout {
+    flex-direction: column;
+  }
+
+  .sidebar-layout .sidebar {
+    width: 100%;
+    max-width: 100%;
+    border-right: none;
+    border-bottom: 1px solid hsl(var(--muted-foreground) / 0.2);
+  }
+
+  .sidebar-layout .sidebar .w-\[320px\] {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .sidebar-layout .content-area {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .sidebar-layout[data-view="list"] .content-area,
+    .sidebar-layout.sidebar-open .content-area,
+    .sidebar-layout[data-view="note"]:not(.sidebar-open) .sidebar-container {
+    display: none;
+  }
+
+  .sidebar-layout[data-view="note"] .mobile-back-button {
+    display: flex;
+  }
+}
 
 .placeholder\:text-sm::-moz-placeholder {
   font-size: 0.875rem;
@@ -1255,6 +1222,10 @@ body {
 
 .hover\:bg-muted-foreground\/10:hover {
   background-color: hsl(var(--muted-foreground) / 0.1);
+}
+
+.hover\:text-foreground:hover {
+  color: hsl(var(--foreground));
 }
 
 .hover\:opacity-80:hover {
@@ -1279,11 +1250,6 @@ body {
   background-color: rgb(53 53 51 / var(--tw-bg-opacity, 1));
 }
 
-.dark\:bg-\[\#9D7D28\]:is(.dark *) {
-  --tw-bg-opacity: 1;
-  background-color: rgb(157 125 40 / var(--tw-bg-opacity, 1));
-}
-
 .dark\:bg-muted:is(.dark *) {
   background-color: hsl(var(--muted));
 }
@@ -1291,10 +1257,6 @@ body {
 .dark\:text-white:is(.dark *) {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity, 1));
-}
-
-.dark\:text-white\/80:is(.dark *) {
-  color: rgb(255 255 255 / 0.8);
 }
 
 @media (min-width: 640px) {

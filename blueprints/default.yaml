@@ -12,19 +12,18 @@ form:
               type: text
               ordering@: 2
               label: Emoji
-              default: 📝
-              help: The emoji to use for the note.
+              placeholder: 📝
+              help: Emoji shown next to the note title. Leave empty to use the theme's default emoji.
               size: small
               validate:
                 type: string
-                min: 1
-                max: 2
+                max: 16
             header.pinned:
               type: toggle
               ordering@: 3
               label: Pinned
               default: 0
-              help: Whether the note is pinned.
+              help: Pinned notes are listed at the top of the sidebar.
               highlight: 0
               options:
                 1: PLUGIN_ADMIN.YES

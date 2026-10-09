@@ -1,0 +1,19 @@
+{#
+    Sidebar search. With the TNTSearch plugin enabled, results come from its JSON endpoint
+    (and the form falls back to the plugin's search page without JavaScript). Without it,
+    the notes list is filtered locally on titles and excerpts.
+#}
+{% set tntsearch = config.plugins.tntsearch.enabled %}
+{% set query_route = '/' ~ config.get('plugins.tntsearch.query_route', '/s')|trim('/') %}
+{% set search_route = '/' ~ config.get('plugins.tntsearch.search_route', '/search')|trim('/') %}
+<form role="search" class="notes-search relative" method="get"
+    {%- if tntsearch %} action="{{ (base_url ~ search_route)|e }}" data-search-mode="tntsearch" data-search-uri="{{ (base_url ~ query_route ~ '.json')|e }}" data-search-min="{{ config.get('plugins.tntsearch.min', 3)|e }}"{% else %} data-search-mode="local" data-search-min="1"{% endif %}>
+    <svg class="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="11" cy="11" r="8"></circle>
+        <path d="m21 21-4.3-4.3"></path>
+    </svg>
+    <input type="search" name="q" id="notes-search-input"
+        class="notes-search-input w-full h-[2.4rem] pl-8 pr-8 py-0.5 rounded-lg text-base sm:text-sm placeholder:text-sm focus:outline-none border border-muted-foreground/20 dark:border-none dark:bg-[#353533]"
+        placeholder="Search..." autocomplete="off" spellcheck="false" aria-label="Search notes" aria-controls="notes-list">
+    <button type="button" class="notes-search-clear absolute right-2 top-1/2 -translate-y-1/2 px-1 text-lg leading-none text-muted-foreground hover:text-foreground" aria-label="Clear search" hidden>&times;</button>
+</form>

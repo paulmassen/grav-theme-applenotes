@@ -5,7 +5,7 @@ module.exports = {
   darkMode: ["class"],
   content: [
     './templates/**/*.twig',
-    './templates/**/*.html.twig',
+    './js/**/*.js',
   ],
   prefix: "",
   theme: {
@@ -83,6 +83,8 @@ module.exports = {
   },
   plugins: [require("tailwindcss-animate")],
 }
+
+
 
 
 

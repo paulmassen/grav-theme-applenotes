@@ -4,10 +4,11 @@ module.exports = {
     'tailwindcss/nesting': {},
     tailwindcss: {},
     autoprefixer: {},
-    ...process.env.NODE_ENV === 'production'
-       ? {'cssnano': {}} : {}
+    // Production builds are minified by `tailwindcss --minify` (see package.json).
   }
 }
+
+
 
 
 
